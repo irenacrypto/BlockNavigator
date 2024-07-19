@@ -1,0 +1,41 @@
+# scripts/main.py
+
+from scripts.block_navigation import fetch_block_data, get_block_info
+from scripts.transaction_details import fetch_transaction_data, get_transaction_summary
+from scripts.block_statistics import calculate_block_statistics, calculate_transaction_statistics
+from scripts.visualization import plot_block_statistics, plot_transaction_summary, plot_fee_distribution
+from utils.data_utils import save_data, load_json
+
+def main():
+    # Fetch and process block data
+    api_url = 'https://api.blockchain.example.com'
+    block_number = 123456
+    
+    block_data = fetch_block_data(api_url, block_number)
+    block_info = get_block_info(block_data)
+    
+    # Save block info data
+    save_data(block_info.to_dict(orient='records'), 'data/block_info.json')
+    
+    # Fetch and process transaction data
+    transaction_data = fetch_transaction_data(api_url, block_number)
+    transaction_summary = get_transaction_summary(transaction_data)
+    
+    # Save transaction summary data
+    save_data(transaction_summary.to_dict(orient='records'), 'data/transaction_summary.json')
+    
+    # Calculate statistics
+    block_stats = calculate_block_statistics(block_data)
+    transaction_stats = calculate_transaction_statistics(transaction_data)
+    
+    # Save statistics data
+    save_data(block_stats.to_dict(orient='records'), 'data/block_stats.json')
+    save_data(transaction_stats.to_dict(orient='records'), 'data/transaction_stats.json')
+    
+    # Visualize data
+    plot_block_statistics(block_info)
+    plot_transaction_summary(transaction_summary)
+    plot_fee_distribution(transaction_summary)
+
+if __name__ == "__main__":
+    main()
